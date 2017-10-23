@@ -1,3 +1,5 @@
+module TicTacTow where
+
 import Data.Char
 import Data.Maybe
 import Data.List
@@ -39,13 +41,13 @@ wins p g = any line (rows ++ cols ++ dias)
 diag :: [[a]] -> [a]
 diag g = [g !! n !! n | n <- [0..size-1]]  
         
+won :: Grid -> Bool
 won g = wins O g || wins X g
 
 putGrid :: Grid -> IO ()
 putGrid =
   putStrLn . unlines . concat . interleave bar . map showRow
   where bar = [replicate ((size * 4) - 1) '-']
-
 
 
 showRow :: [Player] -> [String]
