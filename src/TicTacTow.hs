@@ -167,8 +167,7 @@ bestmove g p = head [ g' | Node (g', p') _ <- ts, p' == best ]
   where tree = prune depth (gametree g p)
         Node (_, best) ts = minimax tree
 
-
-    
+        
 -- mainz
 
 play :: Grid -> Player -> IO ()

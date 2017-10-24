@@ -25,11 +25,13 @@ play handle move = do
 
 echo :: Handle -> IO ()
 echo h = do
-  fromServer <- hGetLine h
-  putStrLn $ "> " ++ fromServer
   
   res <- getLine
   hPutStrLn h res
+
+  fromServer <- hGetLine h
+  putStrLn $ "> " ++ fromServer
+  
   echo h  
 
 

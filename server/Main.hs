@@ -4,7 +4,7 @@ import Conf (defaultPort)
 import Control.Concurrent
 import Network.Socket
 import System.IO
-import TicTacTow (putGrid)
+import TicTacTow (putGridx)
 import TTTParser (parseGame)
 
 
@@ -50,22 +50,23 @@ runGame handle = do
   case parseGame res of
     Just game -> do
       putGrid game
+      hPutStrLn handle "got game!"
       runGame handle
     Nothing   -> do
       putStrLn "No game"
 
 
-echo :: Handle -> IO ()
-echo handle = do
-  line <- stripnr <$> hGetLine handle
+-- echo :: Handle -> IO ()
+-- echo handle = do
+--   line <- stripnr <$> hGetLine handle
 
-  case parseGame line of
-    Just game -> putGrid game
-    Nothing -> putStrLn $ "No Game: " ++ line
+--   case parseGame line of
+--     Just game -> putGrid game
+--     Nothing -> putStrLn $ "No Game: " ++ line
 
    
-  if line == "exit"
-    then hClose handle
-    else do    
-    hPutStrLn handle ("--" ++ line ++ "--")
-    echo handle
+--   if line == "exit"
+--     then hClose handle
+--     else do    
+--     hPutStrLn handle ("--" ++ line ++ "--")
+--     echo handle

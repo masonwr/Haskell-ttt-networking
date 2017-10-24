@@ -36,4 +36,6 @@ parseGame gameStr =
     Left _ -> Nothing
   
 
-
+-- gameToString :: Grid -> String
+-- gameToString g = map rowToString g
+--   where rowToString row = map show 
