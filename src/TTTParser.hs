@@ -1,8 +1,9 @@
 module TTTParser ( parseGame
-                 , gameToString
+                 , gridToStr
                  ) where 
 
 import Conf (defaultGameSize)
+import Data.List
 import Control.Monad
 import Text.ParserCombinators.Parsec
 import TicTacTow (Player (..), Grid)
@@ -40,5 +41,5 @@ parseGame gameStr =
   
 
 
-gameToString :: Grid -> String
-gameToString = join . (map show =<<)
+gridToStr :: Grid -> String
+gridToStr = join . join . intersperse ["|"] . map (map show)
