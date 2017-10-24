@@ -8,21 +8,15 @@ import TicTacTow (putGrid)
 import TTTParser (parseGame)
 
 
-
 main :: IO ()
 main = do
   putStrLn "hello from server!"
   runServer defaultPort
 
 
-stripr :: String -> String
-stripr = filter $ (/= '\r')
-
-stripn :: String -> String
-stripn = filter $ (/= '\n')
 
 stripnr :: String -> String
-stripnr = stripn . stripr
+stripnr = filter (/= '\r') . filter (/= '\n')
 
 
 runServer :: PortNumber -> IO ()
@@ -47,6 +41,19 @@ runConn (sock, addr) = do
   echo handle
 
 
+runGame :: Handle -> IO ()
+runGame handle = do
+  res <- stripnr <$> hGetLine handle
+
+  putStrLn "res!"
+  
+  case parseGame res of
+    Just game -> do
+      putGrid game
+      runGame handle
+    Nothing   -> do
+      putStrLn "No game"
+
 
 echo :: Handle -> IO ()
 echo handle = do
@@ -54,10 +61,9 @@ echo handle = do
 
   case parseGame line of
     Just game -> putGrid game
-    Nothing -> putStrLn "No Game"
+    Nothing -> putStrLn $ "No Game: " ++ line
 
-  print line
-  print $ stripr line  
+   
   if line == "exit"
     then hClose handle
     else do    
