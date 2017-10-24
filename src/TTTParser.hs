@@ -1,9 +1,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleContexts #-}
+
 module TTTParser (parseGame) where 
 
 import Text.ParserCombinators.Parsec
-import Text.Parsec
+--import Text.Parsec
 import TicTacTow (Player (..), Grid)
 import Data.Char (toUpper, toLower)
 

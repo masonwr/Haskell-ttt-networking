@@ -6,6 +6,8 @@ module Lib
 import Control.Concurrent
 import Network.Socket
 import System.IO
+import TicTacTow (putGrid)
+import TTTParser (parseGame)
 
 
 stripr :: String -> String
@@ -40,9 +42,15 @@ runConn (sock, addr) = do
   echo handle
 
 
+
 echo :: Handle -> IO ()
 echo handle = do
   line <- stripnr <$> hGetLine handle
+
+  case parseGame line of
+    Just game -> putGrid game
+    Nothing -> putStrLn "No Game"
+
   print line
   print $ stripr line  
   if (line == "exit")

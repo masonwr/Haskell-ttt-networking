@@ -4,7 +4,6 @@ import Lib
 
 
 
-
 main :: IO ()
 main = do
   putStrLn "hello from server!"

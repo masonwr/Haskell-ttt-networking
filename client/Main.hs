@@ -2,6 +2,7 @@ import Network.Socket
 import System.IO
 import Conf (defaultPort)
 
+
 firstMove :: IO String
 firstMove = pure "X--|---|---"
 
