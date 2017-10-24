@@ -1,6 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE FlexibleContexts #-}
-
 module TTTParser (parseGame) where 
 
 import Conf (defaultGameSize)
