@@ -1,25 +1,34 @@
 import Network.Socket
 import System.IO
+import Conf (defaultPort)
 
-port = 1234
-
-firstMove = "X--|---|---"
+firstMove :: IO String
+firstMove = pure "X--|---|---"
 
 main :: IO ()
 main = do  
   handle <- makeHandle
-  move firstMove handle
-  
+  start <- firstMove
+  play handle start
 
-move :: String -> Handle -> IO ()
-move m h = do
-  hPutStrLn h m
-  res <- hGetLine h
+
+play :: Handle -> String -> IO ()
+play handle move = do
+  hPutStrLn handle move
+  res <- hGetLine handle
   putStrLn $ "res: " ++ res
-  res <- getLine
-  move res h
+  _ <- getLine -- return
+  play handle res
   
 
+echo :: Handle -> IO ()
+echo h = do
+  fromServer <- hGetLine h
+  putStrLn $ "> " ++ fromServer
+  
+  res <- getLine
+  hPutStrLn h res
+  echo h  
 
 
 makeHandle :: IO Handle
@@ -27,7 +36,7 @@ makeHandle = do
   sock <- socket AF_INET Stream 0
   localHost <- inet_addr "127.0.0.1"
 
-  let serverAddr = SockAddrInet port localHost
+  let serverAddr = SockAddrInet defaultPort localHost
   connect sock serverAddr
 
   socketToHandle sock ReadWriteMode

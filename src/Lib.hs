@@ -37,7 +37,6 @@ runConn :: (Socket, SockAddr) -> IO ()
 runConn (sock, addr) = do
   print $ "Connection from " ++ (show addr)
   handle <- socketToHandle sock ReadWriteMode
-  hPutStrLn handle "Hello from haskel"  
   echo handle
 
 
