@@ -10,7 +10,8 @@ main :: IO ()
 main = do  
   handle <- makeHandle
   start <- firstMove
-  play handle start
+  echo handle
+  
 
 
 play :: Handle -> String -> IO ()

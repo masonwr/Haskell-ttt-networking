@@ -38,7 +38,7 @@ runConn :: (Socket, SockAddr) -> IO ()
 runConn (sock, addr) = do
   print $ "Connection from " ++ (show addr)
   handle <- socketToHandle sock ReadWriteMode
-  echo handle
+  runGame handle
 
 
 runGame :: Handle -> IO ()
