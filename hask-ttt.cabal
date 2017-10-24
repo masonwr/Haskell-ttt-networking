@@ -19,6 +19,7 @@ library
                      , Conf
   build-depends:       base >= 4.7 && < 5
                      , network
+                     , parsec
   default-language:    Haskell2010
 
 executable server
