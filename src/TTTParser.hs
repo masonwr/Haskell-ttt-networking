@@ -3,8 +3,8 @@
 
 module TTTParser (parseGame) where 
 
+import Conf (defaultGameSize)
 import Text.ParserCombinators.Parsec
---import Text.Parsec
 import TicTacTow (Player (..), Grid)
 import Data.Char (toUpper, toLower)
 
@@ -21,17 +21,21 @@ parsePlayer = xp <|> op <|> b
 
 
 parseRow :: Parser [Player]
-parseRow = count 3 parsePlayer
+parseRow = count defaultGameSize parsePlayer
 
 
 parseGrid :: Parser Grid
 parseGrid = sepBy parseRow (char '|')
 
+trimGridToSize :: Grid -> Maybe Grid
+trimGridToSize g = if length g < defaultGameSize
+                   then Nothing
+                   else pure $ take defaultGameSize g
 
 parseGame :: String -> Maybe Grid
 parseGame gameStr =
   case parse parseGrid "grid parser" gameStr of
-    Right game -> pure game
+    Right game -> trimGridToSize game
     Left _ -> Nothing
   
 

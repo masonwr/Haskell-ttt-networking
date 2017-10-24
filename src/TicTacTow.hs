@@ -1,12 +1,13 @@
 module TicTacTow where
 
+import Conf (defaultGameSize)
 import Data.Char
 import Data.Maybe
 import Data.List
 import System.IO
 
 size :: Int
-size = 3
+size = defaultGameSize
 
 data Player = O | B | X
   deriving (Eq, Ord, Show)
