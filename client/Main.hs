@@ -5,30 +5,32 @@ import TTTParser
 import NetworkTTT
 import TicTacTow
 
-firstMove :: IO String
-firstMove = pure "---|O--|---"
+clientPlayer = O
+
+firstMove = "---|"++show clientPlayer++"--|---"
+startGrid = strToGame firstMove
+    
 
 main :: IO ()
 main = do  
-  handle <- makeHandle
-  start <- firstMove
-  play handle start
+  handle <- makeHandle  
+  play handle startGrid
+
+
+play :: Handle -> NetworkGame -> IO ()
+play handle game = do
+  putStrLn $ "play...?"
+  putGrid' game
+
+  _ <- getLine
   
-play :: Handle -> String -> IO ()
-play handle move = do
-  putStrLn $ "send?  " ++ move
-  _ <- getLine -- return
-
-  hPutStrLn handle move
-
-  res <- hGetLine handle
+  postMove handle game
   
-  putStrLn $ "responce from server: " ++ res  
-
-  case makePlay O (parseGame res) of
-    Just nextMove -> play handle nextMove
-    Nothing -> putStrLn "Error!"
-      
+  gridE <- getGrid handle
+  
+  case gridE of
+    Left err   -> putStrLn  err
+    Right grid -> play handle (makeMove grid clientPlayer)
 
 
 makeHandle :: IO Handle

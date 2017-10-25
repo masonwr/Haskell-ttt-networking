@@ -8,6 +8,9 @@ import TicTacTow (putGrid, bestmove, Player(..), Grid)
 import TTTParser (parseGame, gridToStr)
 import NetworkTTT
 
+serverPlayer = X
+
+
 main :: IO ()
 main = do
   putStrLn "hello from server!"
@@ -46,16 +49,16 @@ runConn (sock, addr) = do
 
 runGame :: Handle -> IO ()
 runGame handle = do
-  putStrLn "running..."
-  res <- stripnr <$> hGetLine handle
-  putStrLn $ "after get " ++ res
+  netGame <- getGrid handle
 
-  case makePlay X (parseGame res) of
-    Just str -> do
-      putStrLn $ "after play: " ++ str
-      hPutStrLn handle str
-    Nothing  -> hPutStrLn handle "error!"
+  putStrLn $ show netGame
+  
+  case netGame of
+    Left err   -> hPutStrLn handle err
+    Right grid -> do
+      putStrLn $ show (makeMove grid serverPlayer)
+      postMove handle (makeMove grid serverPlayer)
+      runGame handle
 
-  runGame handle
   
 
