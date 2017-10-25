@@ -26,6 +26,7 @@ getGrid handle = do
   res <- hGetLine handle  
   pure $ strToGame res  
 
+
     
 strToGame :: String -> NetworkGame
 strToGame gridStr =  case parseGame gridStr of

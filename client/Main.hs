@@ -7,7 +7,7 @@ import TicTacTow
 
 clientPlayer = O
 
-firstMove = "---|"++show clientPlayer++"--|---"
+firstMove = "---|-"++show clientPlayer++"-|---"
 startGrid = strToGame firstMove
     
 
@@ -29,7 +29,7 @@ play handle game = do
   gridE <- getGrid handle
   
   case gridE of
-    Left err   -> putStrLn  err
+    Left err   -> putStrLn err
     Right grid -> play handle (makeMove grid clientPlayer)
 
 
