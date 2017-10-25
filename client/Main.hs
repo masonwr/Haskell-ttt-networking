@@ -14,7 +14,6 @@ main = do
   start <- firstMove
   play handle start
   
-
 play :: Handle -> String -> IO ()
 play handle move = do
   putStrLn $ "send?  " ++ move
@@ -24,7 +23,7 @@ play handle move = do
 
   res <- hGetLine handle
   
-  putStrLn $ "responce from server: " ++ res
+  putStrLn $ "responce from server: " ++ res  
 
   case makePlay O (parseGame res) of
     Just nextMove -> play handle nextMove
