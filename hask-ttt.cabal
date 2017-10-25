@@ -18,6 +18,7 @@ library
   exposed-modules:     Conf
                      , TTTParser
                      , TicTacTow
+                     , NetworkTTT
   build-depends:       base >= 4.7 && < 5
                      , network
                      , parsec

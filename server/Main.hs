@@ -4,9 +4,9 @@ import Conf (defaultPort)
 import Control.Concurrent
 import Network.Socket
 import System.IO
-import TicTacTow (putGridx)
-import TTTParser (parseGame)
-
+import TicTacTow (putGrid, bestmove, Player(..), Grid)
+import TTTParser (parseGame, gridToStr)
+import NetworkTTT
 
 main :: IO ()
 main = do
@@ -19,6 +19,7 @@ stripnr :: String -> String
 stripnr = filter (/= '\r') . filter (/= '\n')
 
 
+
 runServer :: PortNumber -> IO ()
 runServer port = do
   sock <- socket AF_INET Stream 0
@@ -26,6 +27,8 @@ runServer port = do
   bind sock (SockAddrInet port iNADDR_ANY)
   listen sock 2
   mainLoop sock
+
+
 
 mainLoop :: Socket -> IO ()
 mainLoop sock = do
@@ -43,30 +46,16 @@ runConn (sock, addr) = do
 
 runGame :: Handle -> IO ()
 runGame handle = do
+  putStrLn "running..."
   res <- stripnr <$> hGetLine handle
+  putStrLn $ "after get " ++ res
 
-  putStrLn "res!"
+  case makePlay X (parseGame res) of
+    Just str -> do
+      putStrLn $ "after play: " ++ str
+      hPutStrLn handle str
+    Nothing  -> hPutStrLn handle "error!"
+
+  runGame handle
   
-  case parseGame res of
-    Just game -> do
-      putGrid game
-      hPutStrLn handle "got game!"
-      runGame handle
-    Nothing   -> do
-      putStrLn "No game"
 
-
--- echo :: Handle -> IO ()
--- echo handle = do
---   line <- stripnr <$> hGetLine handle
-
---   case parseGame line of
---     Just game -> putGrid game
---     Nothing -> putStrLn $ "No Game: " ++ line
-
-   
---   if line == "exit"
---     then hClose handle
---     else do    
---     hPutStrLn handle ("--" ++ line ++ "--")
---     echo handle

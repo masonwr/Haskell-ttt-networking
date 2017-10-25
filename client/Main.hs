@@ -1,38 +1,35 @@
 import Network.Socket
 import System.IO
 import Conf (defaultPort)
-
+import TTTParser
+import NetworkTTT
+import TicTacTow
 
 firstMove :: IO String
-firstMove = pure "X--|---|---"
+firstMove = pure "---|O--|---"
 
 main :: IO ()
 main = do  
   handle <- makeHandle
   start <- firstMove
-  echo handle
+  play handle start
   
-
 
 play :: Handle -> String -> IO ()
 play handle move = do
-  hPutStrLn handle move
-  res <- hGetLine handle
-  putStrLn $ "res: " ++ res
+  putStrLn $ "send?  " ++ move
   _ <- getLine -- return
-  play handle res
-  
 
-echo :: Handle -> IO ()
-echo h = do
-  
-  res <- getLine
-  hPutStrLn h res
+  hPutStrLn handle move
 
-  fromServer <- hGetLine h
-  putStrLn $ "> " ++ fromServer
+  res <- hGetLine handle
   
-  echo h  
+  putStrLn $ "responce from server: " ++ res
+
+  case makePlay O (parseGame res) of
+    Just nextMove -> play handle nextMove
+    Nothing -> putStrLn "Error!"
+      
 
 
 makeHandle :: IO Handle

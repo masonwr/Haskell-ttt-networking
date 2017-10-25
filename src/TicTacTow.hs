@@ -1,23 +1,27 @@
 module TicTacTow where
 
 import Conf (defaultGameSize)
-import Data.Char
 import Data.Maybe
 import Data.List
-import System.IO
+
 
 size :: Int
 size = defaultGameSize
 
 data Player = O | B | X
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Ord)
+
+instance Show Player where
+  show O = "O"
+  show X = "X"
+  show B = "-"
 
 type Grid = [[Player]]
 
 next :: Player -> Player
 next O = X
 next X = O
-next B = B
+nnext B = B
 
 empty :: Grid
 empty = replicate size (replicate size B)
@@ -73,54 +77,10 @@ valid g i = 0 <= i && i < size^2 && concat g !! i == B
 
 
 chop :: Int -> [a] -> [[a]]
-chop n [] = []
+chop _ [] = []
 chop n xs = take n xs : chop n (drop n xs)
 
-getNat :: String -> IO Int
-getNat prompt = do
-  putStr prompt
-  xs <- getLine
-  if xs /= [] && all isDigit xs
-    then return (read xs)
-    else do
-      putStrLn "ERROR: Invalid Number!"
-      getNat prompt
 
-
-tictactow :: IO ()
-tictactow = run empty O
-
-cls :: IO ()
-cls = putStr "\ESC[2J"
-
-goto :: (Int, Int) -> IO ()
-goto (x,y) = putStr ("\ESC[" ++ show y ++ ";" ++ show x ++ "H")
-
-run :: Grid -> Player -> IO ()
-run g p = do
-  cls
-  goto (1,1)
-  putGrid g
-  run' g p
-
-run' :: Grid -> Player -> IO ()
-run' g p | wins O g = putStrLn "Player O wins\n"
-         | wins X g = putStrLn "Player X wins\n"
-         | isFull g = putStrLn "DRAW"
-         | otherwise = do
-             i <- getNat (prompt p)
-             case move g i p of
-               Nothing -> do
-                 putStrLn "Error: Invalid move (return to continue)"
-                 _ <- getLine
-                 run g p                                  
-               Just g' -> run g' (next p)
-
-
-prompt :: Player -> String
-prompt p = "Player " ++ show p ++ ", enter your move:"
-
---
 
 data Tree a = Node a [Tree a] deriving (Eq, Show)
 
@@ -148,50 +108,22 @@ prune n (Node x ts) = Node x [prune (n-1) t | t <- ts]
 depth :: Int
 depth = 9
 
-minimax :: Tree Grid -> Tree (Grid, Player)
-minimax (Node g [])
-  | wins O g  = Node (g, O) []
-  | wins X g  = Node (g, X) []
-  | otherwise = Node (g, B) []
 
-minimax (Node g ts) =
-  case turn g of
-    O -> Node (g, minimum ps) ts'
-    X -> Node (g, maximum ps) ts'
-  where
-    ts' = map minimax ts
-    ps  = [ p | Node (_, p) _ <- ts' ]
+minimax :: Tree Grid -> Tree (Grid,Player)
+minimax (Node g [])
+   | wins O g  = Node (g,O) []
+   | wins X g  = Node (g,X) []
+   | otherwise = Node (g,B) []
+minimax (Node g ts) 
+   | turn g == O = Node (g, minimum ps) ts'
+   | turn g == X = Node (g, maximum ps) ts'
+                   where
+                      ts' = map minimax ts
+                      ps  = [p | Node (_,p) _ <- ts']
+
 
 bestmove :: Grid -> Player -> Grid
-bestmove g p = head [ g' | Node (g', p') _ <- ts, p' == best ]
-  where tree = prune depth (gametree g p)
-        Node (_, best) ts = minimax tree
-
-
-
-
-play :: Grid -> Player -> IO ()
-play g p = do
-  cls
-  goto (1,1)
-  putGrid g
-  play' g p
-
-play' :: Grid -> Player -> IO ()
-play' g p
-  | wins O g = putStrLn "O wins"
-  | wins X g = putStrLn "X wins"
-  | isFull g   = putStrLn "It's a draw!\n"
-  | p == O   = do
-      i <- getNat (prompt p)
-      case move g i p of
-        Nothing -> putStrLn "ERROR: Invalid Move!"
-        Just g' -> play g' (next p)
-  | p == X   = do
-      putStrLn "Player X is thinking..."
-      (play $! (bestmove g p)) (next p)
-
-main :: IO ()
-main = do
-  hSetBuffering stdout NoBuffering
-  play empty O
+bestmove g p = head [g' | Node (g',p') _ <- ts, p' == best]
+               where 
+                  tree = prune depth (gametree g p)
+                  Node (_,best) ts = minimax tree
