@@ -1,5 +1,6 @@
 import Network.Socket
 import System.IO
+import System.Environment
 import Conf (defaultPort)
 import TTTParser
 import NetworkTTT
@@ -11,11 +12,18 @@ clientPlayer = X
 
 -- firstMove = "-X-|---|---"
 -- startGrid = strToGame firstMove
-    
+
+localHostIP = "127.0.0.1"               
 
 main :: IO ()
-main = do  
-  handle <- makeHandle
+main = do
+  args <- getArgs
+
+  let ipAddr = (head $ args ++ [localHostIP])
+  
+  putStrLn $ "Connecting too: " ++ ipAddr  
+  
+  handle <- makeHandle ipAddr
   startGrid <- getRandomStartingGrid      
   play handle (Right startGrid)
 
@@ -32,8 +40,7 @@ play handle game = do
 
   --_ <- getLine
   
-  postMove handle game
-  
+  postMove handle game  
   gridE <- getGrid handle
   
   case gridE of
@@ -41,10 +48,10 @@ play handle game = do
     Right grid -> play handle (makeMove grid clientPlayer)
 
 
-makeHandle :: IO Handle
-makeHandle = do
+makeHandle :: String -> IO Handle
+makeHandle ipStr = do
   sock <- socket AF_INET Stream 0
-  localHost <- inet_addr "127.0.0.1"
+  localHost <- inet_addr ipStr
 
   let serverAddr = SockAddrInet defaultPort localHost
   connect sock serverAddr
