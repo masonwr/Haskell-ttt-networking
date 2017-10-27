@@ -51,4 +51,4 @@ postMove :: Handle -> NetworkGame -> IO ()
 postMove h game =
   case game of
     Left msg -> hPutStrLn h msg
-    Right g  -> hPutStrLn h $ gridToStr g  
+    Right g  -> hPutStrLn h $ gridToStr g
