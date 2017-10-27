@@ -5,29 +5,32 @@ import TTTParser
 import NetworkTTT
 import TicTacTow
 import System.Random
+import Data.Maybe
 
 clientPlayer = X
 
-firstMove = "-X-|---|---"
-startGrid = strToGame firstMove
+-- firstMove = "-X-|---|---"
+-- startGrid = strToGame firstMove
     
 
 main :: IO ()
 main = do  
   handle <- makeHandle
+  startGrid <- getRandomStartingGrid      
+  play handle (Right startGrid)
 
+
+getRandomStartingGrid :: IO Grid
+getRandomStartingGrid = do
   startPlayI <- randomRIO (0, 8 :: Int)
-  putStrLn $ "stating pos: " ++ show startPlayI
-  
-  play handle startGrid
-
+  pure . fromJust $ move empty startPlayI clientPlayer
 
 play :: Handle -> NetworkGame -> IO ()
 play handle game = do
   putStrLn $ "play...?"
   putGrid' game
 
-  _ <- getLine
+  --_ <- getLine
   
   postMove handle game
   
