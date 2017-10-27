@@ -34,6 +34,7 @@ getGrid handle = do
   pure $ strToGame res  
 
 
+
     
 strToGame :: String -> NetworkGame
 strToGame gridStr =  case parseGame gridStr of
