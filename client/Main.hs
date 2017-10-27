@@ -4,6 +4,7 @@ import Conf (defaultPort)
 import TTTParser
 import NetworkTTT
 import TicTacTow
+import System.Random
 
 clientPlayer = X
 
@@ -13,7 +14,11 @@ startGrid = strToGame firstMove
 
 main :: IO ()
 main = do  
-  handle <- makeHandle  
+  handle <- makeHandle
+
+  startPlayI <- randomRIO (0, 8 :: Int)
+  putStrLn $ "stating pos: " ++ show startPlayI
+  
   play handle startGrid
 
 
