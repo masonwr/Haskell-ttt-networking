@@ -7,7 +7,6 @@ import TicTacTow
 
 clientPlayer = X
 
---firstMove = "---|-"++show clientPlayer++"-|---"
 firstMove = "-X-|---|---"
 startGrid = strToGame firstMove
     
