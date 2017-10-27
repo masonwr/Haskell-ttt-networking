@@ -4,6 +4,7 @@ module NetworkTTT ( getGrid
                   , strToGame
                   , makeMove
                   , putGrid'
+                  , gridToNG
                   ) where
 
 import System.IO
@@ -14,6 +15,9 @@ import TicTacTow
 
 type NetworkGame = Either String Grid
 
+
+gridToNG :: Grid -> NetworkGame
+gridToNG = Right
 
 
 putGrid' :: NetworkGame -> IO ()

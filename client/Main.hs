@@ -8,12 +8,13 @@ import TicTacTow
 import System.Random
 import Data.Maybe
 
+clientPlayer :: Player
 clientPlayer = X
 
--- firstMove = "-X-|---|---"
--- startGrid = strToGame firstMove
 
-localHostIP = "127.0.0.1"               
+localHostIP :: String
+localHostIP = "127.0.0.1"
+
 
 main :: IO ()
 main = do
@@ -24,14 +25,16 @@ main = do
   putStrLn $ "Connecting too: " ++ ipAddr  
   
   handle <- makeHandle ipAddr
-  startGrid <- getRandomStartingGrid      
-  play handle (Right startGrid)
+  startGrid <- getRandomStartingGrid
+  
+  play handle (gridToNG startGrid)
 
 
 getRandomStartingGrid :: IO Grid
 getRandomStartingGrid = do
   startPlayI <- randomRIO (0, 8 :: Int)
   pure . fromJust $ move empty startPlayI clientPlayer
+
 
 play :: Handle -> NetworkGame -> IO ()
 play handle game = do

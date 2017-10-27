@@ -55,7 +55,9 @@ runGame handle = do
   putStrLn $ "received: " ++ show netGame
   
   case netGame of
-    Left err   -> hPutStrLn handle err
+    Left err   -> do
+      putStrLn "closing connection."
+      hPutStrLn handle err
     Right grid -> do
       putStrLn $ "sending: " ++ show (makeMove grid serverPlayer)
       postMove handle (makeMove grid serverPlayer)
