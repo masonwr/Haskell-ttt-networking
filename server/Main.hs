@@ -51,12 +51,12 @@ runGame :: Handle -> IO ()
 runGame handle = do
   netGame <- getGrid handle
 
-  putStrLn $ show netGame
+  putStrLn $ "received: " ++ show netGame
   
   case netGame of
     Left err   -> hPutStrLn handle err
     Right grid -> do
-      putStrLn $ show (makeMove grid serverPlayer)
+      putStrLn $ "sending: " ++ show (makeMove grid serverPlayer)
       postMove handle (makeMove grid serverPlayer)
       runGame handle
 
