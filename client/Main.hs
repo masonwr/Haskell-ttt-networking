@@ -56,5 +56,8 @@ makeHandle ipStr = do
   let serverAddr = SockAddrInet defaultPort localHost
   connect sock serverAddr
 
-  socketToHandle sock ReadWriteMode
+  handle <- socketToHandle sock ReadWriteMode
+  hSetBuffering handle LineBuffering
+
+  return handle
 
