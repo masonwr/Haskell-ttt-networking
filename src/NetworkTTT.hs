@@ -11,7 +11,9 @@ import TTTParser
 import TicTacTow
 
 
+
 type NetworkGame = Either String Grid
+
 
 
 putGrid' :: NetworkGame -> IO ()
@@ -19,6 +21,7 @@ putGrid' g =
   case g of
     Left msg -> putStrLn msg
     Right g  -> putGrid g
+
 
 
 getGrid :: Handle -> IO NetworkGame
@@ -32,6 +35,7 @@ strToGame :: String -> NetworkGame
 strToGame gridStr =  case parseGame gridStr of
     Just grid -> Right grid
     Nothing   -> Left gridStr
+
 
 
 makeMove :: Grid -> Player -> NetworkGame
