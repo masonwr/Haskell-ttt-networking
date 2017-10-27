@@ -8,7 +8,7 @@ import Data.List
 size :: Int
 size = defaultGameSize
 
-data Player = O | B | X
+data Player = X | B | O
   deriving (Eq, Ord)
 
 instance Show Player where
@@ -21,7 +21,7 @@ type Grid = [[Player]]
 next :: Player -> Player
 next O = X
 next X = O
-nnext B = B
+next B = B
 
 empty :: Grid
 empty = replicate size (replicate size B)
@@ -30,8 +30,8 @@ isFull :: Grid -> Bool
 isFull = all (/= B) . concat
 
 turn :: Grid -> Player
-turn g = if os <= xs
-         then O else X
+turn g = if xs <= os 
+         then X else O
   where os = length (filter (== O) ps)
         xs = length (filter (== X) ps)
         ps = concat g
@@ -111,12 +111,12 @@ depth = 9
 
 minimax :: Tree Grid -> Tree (Grid,Player)
 minimax (Node g [])
-   | wins O g  = Node (g,O) []
    | wins X g  = Node (g,X) []
+   | wins O g  = Node (g,O) []
    | otherwise = Node (g,B) []
-minimax (Node g ts) 
-   | turn g == O = Node (g, minimum ps) ts'
-   | turn g == X = Node (g, maximum ps) ts'
+minimax (Node g ts)
+   | turn g == X = Node (g, minimum ps) ts'
+   | turn g == O = Node (g, maximum ps) ts'
                    where
                       ts' = map minimax ts
                       ps  = [p | Node (_,p) _ <- ts']

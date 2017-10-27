@@ -5,9 +5,10 @@ import TTTParser
 import NetworkTTT
 import TicTacTow
 
-clientPlayer = O
+clientPlayer = X
 
-firstMove = "---|-"++show clientPlayer++"-|---"
+--firstMove = "---|-"++show clientPlayer++"-|---"
+firstMove = "-X-|---|---"
 startGrid = strToGame firstMove
     
 

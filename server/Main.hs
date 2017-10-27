@@ -8,7 +8,7 @@ import TicTacTow (putGrid, bestmove, Player(..), Grid)
 import TTTParser (parseGame, gridToStr)
 import NetworkTTT
 
-serverPlayer = X
+serverPlayer = O
 
 
 main :: IO ()

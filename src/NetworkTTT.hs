@@ -52,12 +52,3 @@ postMove h game =
   case game of
     Left msg -> hPutStrLn h msg
     Right g  -> hPutStrLn h $ gridToStr g  
-                    
-  
-
--- makePlay :: Grid -> Player -> Maybe String
--- makePlay p gm = do
-  
---   pure $ case makeMove g p of
---     Left msg -> msg
---     Right g  -> gridToStr g
