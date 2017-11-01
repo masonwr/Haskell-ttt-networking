@@ -1,3 +1,9 @@
+{-
+Tic Tac Tow Code adapted from:
+Gram Hutton's -Programming in Haskell-
+
+http://www.cs.nott.ac.uk/~pszgmh/pih.html
+-}
 module TicTacTow where
 
 import Conf (defaultGameSize)
