@@ -19,7 +19,7 @@ To run the client `ttt-client [ip of host]`, sit back and marvel at
 the game unfolding before your eyes (if no host is specified, localhost is assumed). 
 
 
-The game logic is adapted from Gram Hutton's excellent [Programming in
+The game logic ([Minimax](https://en.wikipedia.org/wiki/Minimax)) is adapted from Gram Hutton's excellent [Programming in
 Haskell](http://www.cs.nott.ac.uk/~pszgmh/pih.html) book (highly recommended).
 
 
