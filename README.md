@@ -2,7 +2,7 @@
 
 Networking class assignment, basic Tic-tac-toe server client. Implemented in haskell.
 
-assuming that [stack](https://docs.haskellstack.org/en/stable/README/) in installed...
+assuming that [stack](https://docs.haskellstack.org/en/stable/README/) is installed...
 
 
 ``` shellsession
